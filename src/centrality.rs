@@ -1,7 +1,8 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 use super::graph::Graph;
 
-
+// This computes the degree centrality for each node, counts the number of direct connections it has, 
+// It takes in a Graph reference and outputs a HashMap, where the keys and values are usize. 
 pub fn degree_centrality(graph: &Graph) -> HashMap<usize, usize> {
     let mut degrees = HashMap::new();
     for (node, neighbors) in graph {
@@ -10,7 +11,8 @@ pub fn degree_centrality(graph: &Graph) -> HashMap<usize, usize> {
     degrees
 }
 
-
+// This computes the shortest path distance between a starting node and other nodes through Breadth-First Search
+// It takes a a reference to Graph and a variable start of type usize. It outputs a HashMap.
 fn bfs_shortest_paths(graph: &Graph, start: usize) -> HashMap<usize, usize> {
     let mut distances = HashMap::new();
     let mut visited = HashSet::new();
@@ -20,7 +22,7 @@ fn bfs_shortest_paths(graph: &Graph, start: usize) -> HashMap<usize, usize> {
     visited.insert(start);
     queue.push_back(start);
 
-
+    // This loop traverses each node and calculates the shortest distance
     while let Some(node) = queue.pop_front() {
         let current_distance = distances[&node];
         // explain for loop
@@ -36,7 +38,9 @@ fn bfs_shortest_paths(graph: &Graph, start: usize) -> HashMap<usize, usize> {
     distances
 }
 
-
+// This maps each node ID to its closness centrality score, which is calculated by figuring out how 
+// close a node is from the other nodes
+// It takes in a reference of Graph and outputs a HashMap
 pub fn closeness_centrality(graph: &Graph) -> HashMap<usize, f64> {
     let mut closeness = HashMap::new();
 
@@ -53,6 +57,10 @@ pub fn closeness_centrality(graph: &Graph) -> HashMap<usize, f64> {
     closeness
 }
 
+// This function computes the betweenness centrality for all of the nodes
+// It performs breadth-first search to find and track the shortest path to the other nodes. 
+// Then, it back-propagate dependencies and normalizes the scores
+// It takes in a reference of Graph and outputs a HashMap
 pub fn betweenness_centrality(graph: &Graph) -> HashMap<usize, f64> {
     let mut betweenness = HashMap::new();
 
@@ -110,14 +118,14 @@ pub fn betweenness_centrality(graph: &Graph) -> HashMap<usize, f64> {
     betweenness
 }
 
-
+// test cases
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::graph::Graph;
 
+    // Creates a small undirected triangle graph
     fn sample_graph() -> Graph {
-        
         let mut graph: Graph = HashMap::new();
         graph.insert(1, vec![2, 3]);
         graph.insert(2, vec![1, 3]);
@@ -127,6 +135,7 @@ mod tests {
 
     #[test]
  
+     // Tests the degree centrality function to ensure it is working correctly
     fn test_degree_centrality() {
         let graph = sample_graph();
         let degrees = degree_centrality(&graph);
@@ -136,6 +145,7 @@ mod tests {
     }
 
     #[test]
+    // Tests the closeness centrality function to ensure it is working correctly
     fn test_closeness_centrality() {
         let graph = sample_graph();
         let closeness = closeness_centrality(&graph);
@@ -144,6 +154,7 @@ mod tests {
     }
 
     #[test]
+    // Tests the betweenness centrality function to ensure it is working correctly
     fn test_betweenness_centrality() {
         let graph = sample_graph();
         let betweenness = betweenness_centrality(&graph);
