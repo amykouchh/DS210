@@ -1,9 +1,8 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 use super::graph::Graph;
 
-// what it does
-// inputs & outputs
-pub fn compute_degree_centrality(graph: &Graph) -> HashMap<usize, usize> {
+
+pub fn degree_centrality(graph: &Graph) -> HashMap<usize, usize> {
     let mut degrees = HashMap::new();
     for (node, neighbors) in graph {
         degrees.insert(*node, neighbors.len());
@@ -11,8 +10,7 @@ pub fn compute_degree_centrality(graph: &Graph) -> HashMap<usize, usize> {
     degrees
 }
 
-// what it does
-// inputs & outputs
+
 fn bfs_shortest_paths(graph: &Graph, start: usize) -> HashMap<usize, usize> {
     let mut distances = HashMap::new();
     let mut visited = HashSet::new();
@@ -22,7 +20,7 @@ fn bfs_shortest_paths(graph: &Graph, start: usize) -> HashMap<usize, usize> {
     visited.insert(start);
     queue.push_back(start);
 
-    // explain while loop
+
     while let Some(node) = queue.pop_front() {
         let current_distance = distances[&node];
         // explain for loop
@@ -38,9 +36,8 @@ fn bfs_shortest_paths(graph: &Graph, start: usize) -> HashMap<usize, usize> {
     distances
 }
 
-// what it does
-// inputs & outputs
-pub fn compute_closeness_centrality(graph: &Graph) -> HashMap<usize, f64> {
+
+pub fn closeness_centrality(graph: &Graph) -> HashMap<usize, f64> {
     let mut closeness = HashMap::new();
 
     for &node in graph.keys() {
@@ -56,9 +53,7 @@ pub fn compute_closeness_centrality(graph: &Graph) -> HashMap<usize, f64> {
     closeness
 }
 
-// what it does
-// inputs & outputs
-pub fn compute_betweenness_centrality(graph: &Graph) -> HashMap<usize, f64> {
+pub fn betweenness_centrality(graph: &Graph) -> HashMap<usize, f64> {
     let mut betweenness = HashMap::new();
 
     for &s in graph.keys() {
@@ -115,17 +110,14 @@ pub fn compute_betweenness_centrality(graph: &Graph) -> HashMap<usize, f64> {
     betweenness
 }
 
-// test cases
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::graph::Graph;
 
     fn sample_graph() -> Graph {
-        // Creates a small undirected triangle graph:
-        // 1 -- 2
-        //  \\  |
-        //    3
+        
         let mut graph: Graph = HashMap::new();
         graph.insert(1, vec![2, 3]);
         graph.insert(2, vec![1, 3]);
@@ -134,9 +126,10 @@ mod tests {
     }
 
     #[test]
+ 
     fn test_degree_centrality() {
         let graph = sample_graph();
-        let degrees = compute_degree_centrality(&graph);
+        let degrees = degree_centrality(&graph);
         assert_eq!(degrees.get(&1), Some(&2));
         assert_eq!(degrees.get(&2), Some(&2));
         assert_eq!(degrees.get(&3), Some(&2));
@@ -145,7 +138,7 @@ mod tests {
     #[test]
     fn test_closeness_centrality() {
         let graph = sample_graph();
-        let closeness = compute_closeness_centrality(&graph);
+        let closeness = closeness_centrality(&graph);
         let value = closeness.get(&1).unwrap();
         assert!(*value > 0.0 && *value < 1.0); // just check it calculated
     }
@@ -153,7 +146,7 @@ mod tests {
     #[test]
     fn test_betweenness_centrality() {
         let graph = sample_graph();
-        let betweenness = compute_betweenness_centrality(&graph);
+        let betweenness = betweenness_centrality(&graph);
         for (_, score) in betweenness {
             assert!(score >= 0.0); // basic sanity check
         }
